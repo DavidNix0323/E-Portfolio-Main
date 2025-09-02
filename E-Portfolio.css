@@ -500,121 +500,311 @@ MODAL
   font-size: 32px;
   z-index: 100;
 }
-/* Layout */
+/* === Layout Grid: 3x2 === */
 .anim__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 28px;
   padding: 0 20px;
 }
 
-/* Card */
+/* === Card Base === */
 .anim__card {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   border-radius: 16px;
   overflow: hidden;
   background: #0f1115;
   box-shadow: 0 16px 60px rgba(0, 0, 0, 0.45);
-  transform: translateY(24px);
-  opacity: 0;
   transition:
     transform 700ms cubic-bezier(0.22, 1, 0.36, 1) var(--delay, 0ms),
     opacity 700ms ease var(--delay, 0ms);
   will-change: transform, opacity;
-  perspective: 900px; /* for subtle 3D tilt */
+  perspective: 900px;
+  transform-style: preserve-3d;
+  height: auto;
+  min-height: 240px;
 }
 
-.anim__card.in-view {
-  transform: translateY(0);
-  opacity: 1;
+/* === Gravity Gun Card (keeps same box size as others) === */
+.anim__card.gravity-gun-card {
+  background: #0f1115 !important;
+  border-radius: 16px !important;
+  box-shadow: 0 16px 60px rgba(0, 0, 0, 0.45) !important;
+  overflow: hidden !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: inherit !important;
 }
 
-/* Image */
+/* === Image Styling (default cards) === */
 .anim__img {
   width: 100%;
-  height: 320px;
+  height: auto;
   object-fit: cover;
-  transform: scale(1.02) translateZ(0);
-  transition: transform 600ms ease;
+  border-radius: 16px;
+  background-color: #111;
+  transition: transform 600ms ease, filter 400ms ease;
+  backface-visibility: hidden;
 }
 
-/* Overlay */
+/* === Gravity Gun Image === */
+#gravityGunImage {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 16px;
+  background: none;
+  display: block;
+}
+
+.gravity-gun-img {
+  background-color: transparent !important;
+}
+
+/* === Overlay (text always visible, doesn’t block clicks) === */
 .anim__overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(12, 14, 20, 0) 30%, rgba(12, 14, 20, 0.85) 100%);
+  z-index: 2;
+  background: linear-gradient(
+    180deg,
+    rgba(12, 14, 20, 0.2) 20%,
+    rgba(12, 14, 20, 0.95) 100%
+  );
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding: 20px;
+  padding: 24px;
   color: #fff;
-  opacity: 0;
-  transform: translateY(6%);
-  transition: opacity 400ms ease, transform 500ms ease;
+  opacity: 1;
+  border-radius: 16px;
+  pointer-events: none; /* lets mouse pass through */
 }
 
 .anim__title {
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 700;
-  letter-spacing: 0.2px;
+  letter-spacing: 0.3px;
 }
 
 .anim__meta {
-  margin-top: 6px;
-  font-size: 14px;
-  opacity: 0.85;
+  margin-top: 8px;
+  font-size: 15px;
+  opacity: 0.9;
 }
 
-/* Hover/Focus */
+/* === Larger Preview Images === */
+.anim__img,
+.gravity-gun-img {
+  height: 320px;
+  object-fit: cover;
+  border-radius: 16px;
+  transition: transform 0.4s ease, filter 0.4s ease;
+}
+
+/* Hover & Tilt Effects */
 .anim__card:hover .anim__img,
 .anim__card:focus-within .anim__img {
-  transform: scale(1.08);
-  filter: blur(1px) brightness(0.9);
+  transform: scale(1.12);
+  filter: brightness(0.9);
 }
 
-.anim__card:hover .anim__overlay,
-.anim__card:focus-within .anim__overlay {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Subtle 3D tilt via CSS variables set by JS */
-.anim__card {
-  transform-style: preserve-3d;
-}
 .anim__card:hover {
-  transform: translateY(0) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transform: rotateX(var(--rx, 2deg)) rotateY(var(--ry, 6deg));
 }
 
-/* Rounded corners look cleaner with images */
-.anim__img,
-.anim__overlay {
-  border-radius: 16px;
+/* === Gravity Gun Canvas === */
+.gravity-gun-canvas {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 12px;
+  margin-top: 12px;
+  background: radial-gradient(circle at center, #0f0f0f, #000);
+  display: block;
 }
-.gravity-gun-card canvas {
+
+/* Fullscreen when equipped */
+body.gunEquipped .gravity-gun-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 900;
+  border-radius: 0;
+  margin: 0;
+  aspect-ratio: auto;
+}
+
+/* === Floating Cursor Gun (below objects so hover works) === */
+#gravityGunCursor {
+  position: fixed;
+  pointer-events: none;
+  width: 200px;
+  height: 200px;
+  z-index: 1500; /* lower than physElement */
+  transform: translate(-50%, -50%);
+  display: none;
+  image-rendering: crisp-edges;
+  mix-blend-mode: screen;
+  filter: drop-shadow(0 0 12px rgba(0, 255, 255, 0.75));
+}
+
+body.physGunEquipped {
+  cursor: none !important;
+}
+
+/* === PhysElement Defaults === */
+.physElement {
+  position: absolute;
+  font-size: 56px;
+  cursor: grab;
+  user-select: none;
+  z-index: 2000; /* sits above the gun cursor */
+  transition: transform 0.3s ease, top 0.4s ease, left 0.4s ease;
+}
+
+.physElement.dragging {
+  cursor: grabbing;
+  transition: none;
+}
+
+/* Resting state */
+.physElement.resting {
+  position: relative !important;
+  left: auto !important;
+  top: auto !important;
+  transform: none !important;
+  z-index: 1000;
+}
+
+/* === Fire / Recoil FX === */
+.physElement.fired {
+  animation: firedPulse 0.4s ease-out;
+  filter: drop-shadow(0 0 16px rgba(0, 255, 255, 0.6));
+}
+
+@keyframes firedPulse {
+  0%   { transform: scale(1) rotate(0deg); }
+  40%  { transform: scale(1.2) rotate(15deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+/* === Trigger Highlight === */
+#gravityGunTrigger.active {
+  transform: scale(1.08);
+  filter: drop-shadow(0 0 14px #00ffff);
+}
+
+/* === Responsive Tweaks === */
+@media (max-width: 768px) {
+  .anim__grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  .anim__title {
+    font-size: 19px;
+  }
+
+  .anim__meta {
+    font-size: 13px;
+  }
+
+  .gravity-gun-canvas {
+    aspect-ratio: 4 / 3;
+  }
+
+  .anim__img,
+  .gravity-gun-img {
+    height: 260px;
+  }
+}
+
+@media (max-width: 600px) {
+  .anim__img,
+  .gravity-gun-img {
+    height: 220px;
+  }
+}
+:root {
+  --particle-opacity-default: 0.85;
+  --particle-opacity-active: 1;
+  --particle-fade-duration: 0.4s;
+}
+
+.particle-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  opacity: var(--particle-opacity-default);
+  transition: opacity var(--particle-fade-duration) ease;
+}
+
+/* Hover for desktop */
+.anim__card:hover .particle-bg {
+  opacity: var(--particle-opacity-active);
+}
+
+/* Touch-friendly tap for mobile */
+.anim__card:active .particle-bg {
+  opacity: var(--particle-opacity-active);
+}
+
+/* Respect reduced motion settings */
+@media (prefers-reduced-motion: reduce) {
+  .particle-bg {
+    transition: none;
+  }
+}
+/* 🔵 Blob Morph SVG */
+.svg-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: visible;
+  aspect-ratio: 1 / 1;
+}
+
+svg {
   width: 100%;
   height: auto;
-  background: radial-gradient(circle at center, #0f0f0f, #000);
-  border-radius: 16px;
+  display: block;
+  overflow: visible;
 }
 
-/* Responsive tweaks */
-@media (min-width: 1200px) {
-  .anim__img { height: 360px; }
-}
-@media (max-width: 600px) {
-  .anim__img { height: 240px; }
+/* 🎨 Blob Path Styling */
+:root {
+  --blob-fill: #00bcd4;
 }
 
-/* Reduced motion accessibility */
-@media (prefers-reduced-motion: reduce) {
-  .anim__card,
-  .anim__img,
-  .anim__overlay {
-    transition: none !important;
-  }
-  .anim__card { transform: none !important; opacity: 1 !important; }
+path,
+.blob-icon {
+  fill: var(--blob-fill);
+  transition: fill 0.3s ease, transform 0.4s ease;
+  transform-origin: center;
+  will-change: transform;
 }
+
+/* 🌗 Theme Sync */
+body.dark-mode {
+  --blob-fill: #ff4081;
+}
+
+
+.morph-target {
+  transform-origin: center;
+  will-change: transform;
+}
+
 
 /*
 
