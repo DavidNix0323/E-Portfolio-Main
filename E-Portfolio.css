@@ -705,6 +705,11 @@ body.physGunEquipped {
   touch-action: none;
 }
 
+.snapZone.highlight {
+  outline: 2px dashed #00ffff;
+  transition: outline 0.3s ease;
+}
+
 /* === Root Variables === */
 :root {
   --blob-fill: #00bcd4;
