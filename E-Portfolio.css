@@ -675,12 +675,11 @@ body.physGunEquipped {
 
 /* Resting state */
 .physElement.resting {
-  position: relative !important;
-  left: auto !important;
-  top: auto !important;
-  transform: none !important;
   z-index: 1000;
+  transform: none;
+  transition: left 0.6s ease, top 0.6s ease, transform 0.6s ease;
 }
+
 
 /* === Fire / Recoil FX === */
 .physElement.fired {
@@ -772,7 +771,7 @@ path,
 /* === Resume Tilt Card === */
 .resume-tilt {
   width: 100%;
-  max-width: 400px;
+
   margin: 0 auto;
   position: relative;
   z-index: 10;
@@ -855,7 +854,7 @@ path,
 
 .anim__card .marquee-track {
   display: inline-block;
-  animation: scroll-left 18s linear infinite;
+  animation: scroll-left 25s linear infinite;
   font-size: 1.1rem;
   color: #1e3a8a;
   white-space: nowrap;
@@ -873,11 +872,27 @@ path,
   color: #3b82f6;
 }
 
-
 @keyframes scroll-left {
-  0% { transform: translateX(100%); }
-  100% { transform: translateX(-100%); }
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
 }
+
+@media (max-width: 768px) {
+  .anim__card .marquee-track {
+    animation-duration: 30s;
+  }
+}
+
+@media (min-width: 769px) {
+  .anim__card .marquee-track {
+    animation-duration: 25s;
+  }
+}
+
 
 /* === Responsive Tweaks === */
 @media (max-width: 768px) {
@@ -1099,6 +1114,8 @@ SHAPES
 @media (max-width: 768px) {
   .title {
     font-size: 80px;
+    max-width: 100%;
+    word-wrap: break-word;
   }
 
   .header__para {
@@ -1113,6 +1130,7 @@ SHAPES
     width: 100%;
     flex-direction: column-reverse;
     border-radius: 0%;
+    overflow-y: auto
   }
 
   .modal__half {
@@ -1123,6 +1141,8 @@ SHAPES
 @media (max-width: 480px) {
   .title {
     font-size: 52px;
+    max-width: 100%;
+    word-wrap: break-word;
   }
 
   .header__para {
