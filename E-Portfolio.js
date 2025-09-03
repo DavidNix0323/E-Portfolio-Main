@@ -33,67 +33,74 @@ window.addEventListener("DOMContentLoaded", () => {
     close: "./assets/gravgun_vm_close.png"
   };
 
-  // --- muzzle anchor ---
-  const MUZZLE_ANCHOR = { xRatio: 0.78, yRatio: 0.58 };
-  const HOLD_DISTANCE = 56;
-  const GUN_FACING = { x: 1, y: 0 };
+ // --- muzzle anchor ---
+const MUZZLE_ANCHOR = { xRatio: 0.78, yRatio: 0.58 };
+const HOLD_DISTANCE = 56;
+const GUN_FACING = { x: 1, y: 0 };
 
-  // --- store original positions ---
-  const originalPositions = new Map();
-  document.querySelectorAll(".physElement").forEach((el) => {
-    originalPositions.set(el, {
-      left: el.style.left,
-      top: el.style.top,
-    });
+// --- store original positions once (keep % values from HTML) ---
+const originalPositions = new Map();
+document.querySelectorAll(".physElement").forEach((el) => {
+  const left = el.style.left || el.getAttribute("data-left") || "0%";
+  const top = el.style.top || el.getAttribute("data-top") || "0%";
+
+  originalPositions.set(el, {
+    left,
+    top,
   });
+});
 
-  // --- helpers ---
-  function setGunState(state) {
-    if (!gunImg || !gunStates[state]) return;
-    gunImg.src = gunStates[state];
-    gunVisualState = state;
-  }
+// --- helpers ---
+function setGunState(state) {
+  if (!gunImg || !gunStates[state]) return;
+  gunImg.src = gunStates[state];
+  gunVisualState = state;
+}
 
-  function showCursorGun(src) {
-    cursorImg.src = src;
-    cursorImg.style.display = "block";
-    cursorImg.style.mixBlendMode = "normal";
-    cursorImg.style.filter = "drop-shadow(0 0 12px rgba(0,0,0,0.45))";
-    cursorImg.style.zIndex = "3000";
-    cursorImg.style.pointerEvents = "none";
-    document.body.style.cursor = "none";
-  }
+function showCursorGun(src) {
+  cursorImg.src = src;
+  cursorImg.style.display = "block";
+  cursorImg.style.mixBlendMode = "normal";
+  cursorImg.style.filter = "drop-shadow(0 0 12px rgba(0,0,0,0.45))";
+  cursorImg.style.zIndex = "3000";
+  cursorImg.style.pointerEvents = "none";
+  document.body.style.cursor = "none";
+}
 
-  function hideCursorGun() {
-    cursorImg.style.display = "none";
-    document.body.style.cursor = "default";
-  }
+function hideCursorGun() {
+  cursorImg.style.display = "none";
+  document.body.style.cursor = "default";
+}
 
-  function resetPhysElementsToRest() {
-    gravgunZone?.querySelectorAll(".physElement").forEach((el) => {
-      el.classList.remove("draggable", "dragging", "fired");
-      el.classList.add("resting");
+// --- reset back to authored % positions on unequip ---
+function resetPhysElementsToRest() {
+  gravgunZone?.querySelectorAll(".physElement").forEach((el) => {
+    el.classList.remove("draggable", "dragging", "fired");
+    el.classList.add("resting");
 
-      const orig = originalPositions.get(el);
-      if (orig) {
-        // Smooth float-back
-        el.style.transition = "left 0.6s ease, top 0.6s ease, transform 0.6s ease";
-        el.style.left = orig.left;
-        el.style.top = orig.top;
+    const orig = originalPositions.get(el);
+    if (orig) {
+      // Smooth float-back into original % coords
+      el.style.transition = "left 0.6s ease, top 0.6s ease, transform 0.6s ease";
+      el.style.position = "absolute"; // keep absolute so it doesn’t drop in flow
+      el.style.left = orig.left;
+      el.style.top = orig.top;
+    }
 
-        setTimeout(() => {
-          el.style.transition = "";
-          el.style.transform = "";
-          el.style.zIndex = "";
-          el.style.cursor = "";
-          el.style.position = ""; 
-        }, 650);
-      }
+    setTimeout(() => {
+      el.style.transition = "";
+      el.style.transform = "";
+      el.style.zIndex = "";
+      el.style.cursor = "";
+    }, 650);
 
-      physicsObjects.delete(el);
-    });
-  }
+    physicsObjects.delete(el);
+  });
+}
 
+
+
+  
   function unequipGun() {
     gravityGunActive = false;
     setGunState(unequipMode === "hover" ? "hover" : "outline");
@@ -174,24 +181,25 @@ window.addEventListener("DOMContentLoaded", () => {
       gravityGunActive = true;
       setGunState("inset");
       showCursorGun(gunStates.close);
-
+  
       document.body.classList.add("physGunEquipped");
       gravityGunTrigger.classList.add("active");
-
+  
       gravgunZone?.querySelectorAll(".physElement").forEach((el) => {
         const rect = el.getBoundingClientRect();
         const vwOffsetX = window.scrollX;
         const vwOffsetY = window.scrollY;
-
+  
         el.classList.add("draggable");
         el.classList.remove("resting");
-
+  
+        // convert to px-based absolute position while equipped
         el.style.position = "absolute";
         el.style.left = `${rect.left + vwOffsetX}px`;
         el.style.top = `${rect.top + vwOffsetY}px`;
         el.style.margin = "0";
         el.style.transform = "none";
-        el.style.zIndex = "2000"; // below cursor
+        el.style.zIndex = "2000";
 
         // Hover listeners
         el.onmouseenter = () => {
@@ -352,6 +360,48 @@ document.addEventListener("visibilitychange", () => {
 
 animateParticles();
 
+// === Marquee Particle Extension ===
+function initMarqueeTrail() {
+  const marqueeCard = document.querySelector('.anim__card:nth-child(6)');
+  const marqueeTrack = marqueeCard?.querySelector('.marquee-track');
+  if (!marqueeTrack) return;
+
+  marqueeTrack.addEventListener('pointermove', (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    if (resumeHoverActive) {
+      particles.push({ x, y, vx: 0, vy: 0 });
+    }
+  });
+
+  marqueeTrack.addEventListener('mouseenter', () => {
+    pulseDisplacement(); // Optional ripple sync
+  });
+
+  let marqueeLoopActive = true;
+
+  function spawnMarqueeParticles() {
+    if (!resumeHoverActive || !marqueeLoopActive) return;
+
+    const rect = canvas.getBoundingClientRect();
+    const trackRect = marqueeTrack.getBoundingClientRect();
+
+    const x = trackRect.left + Math.random() * trackRect.width;
+    const y = trackRect.top + trackRect.height / 2;
+
+    particles.push({ x: x - rect.left, y: y - rect.top, vx: 0, vy: 0 });
+    if (particles.length > 300) particles.splice(0, 50);
+
+    setTimeout(spawnMarqueeParticles, 120);
+  }
+
+  spawnMarqueeParticles();
+}
+
+initMarqueeTrail();
+
 // --- blob morph animation ---
 gsap.registerPlugin(MorphSVGPlugin);
 
@@ -379,12 +429,72 @@ function startBlobMorph() {
     morphSVG: blobShapes[morphIndex % blobShapes.length],
     onComplete: () => {
       morphIndex++;
+      pulseDisplacement(); // 🔁 Sync ripple with morph
       startBlobMorph();
     }
   });
 }
 
 startBlobMorph();
+
+// --- resume tilt logic ---
+document.querySelectorAll('.resume-tilt .tilt-card').forEach((card) => {
+  const inner = card.querySelector('.tilt-inner');
+  if (!inner) return;
+
+  const maxTilt = 35;
+  const scale = 1.07;
+
+  card.addEventListener('pointermove', (e) => {
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    const rotateY = ((x / rect.width) - 0.5) * maxTilt * -2;
+    const rotateX = ((y / rect.height) - 0.5) * maxTilt * 2;
+
+    inner.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(${scale})`;
+  });
+
+  card.addEventListener('pointerleave', () => {
+    inner.style.transform = `rotateX(0deg) rotateY(0deg) scale(1)`;
+  });
+});
+
+// --- displacement SVG logic ---
+(function initDisplacementEffect() {
+  const svg = document.querySelector('.displacement-svg');
+  const turbulence = svg?.querySelector('feTurbulence');
+  if (!svg || !turbulence) return;
+
+  // Pointer-driven distortion
+  svg.addEventListener('pointermove', (e) => {
+    const freq = 0.02 + (e.clientX / window.innerWidth) * 0.05;
+    turbulence.setAttribute('baseFrequency', freq.toFixed(3));
+  });
+
+  svg.addEventListener('pointerleave', () => {
+    turbulence.setAttribute('baseFrequency', '0.02');
+  });
+
+  // Ambient ripple loop
+  let t = 0;
+  function animateTurbulence() {
+    t += 0.01;
+    const freq = 0.02 + Math.sin(t) * 0.015;
+    turbulence.setAttribute('baseFrequency', freq.toFixed(3));
+    requestAnimationFrame(animateTurbulence);
+  }
+
+  animateTurbulence();
+
+  // Pulse effect for blob sync
+  window.pulseDisplacement = function () {
+    turbulence.setAttribute('baseFrequency', '0.08');
+    setTimeout(() => turbulence.setAttribute('baseFrequency', '0.02'), 300);
+  };
+})();
+
 
 
   // --- muzzle pos ---
