@@ -538,6 +538,7 @@ MODAL
   align-items: center;
   justify-content: center;
   color: inherit !important;
+  cursor: pointer;
 }
 
 /* === Image Styling (default cards) === */
@@ -699,6 +700,185 @@ body.physGunEquipped {
   filter: drop-shadow(0 0 14px #00ffff);
 }
 
+/* === Root Variables === */
+:root {
+  --blob-fill: #00bcd4;
+  --particle-opacity-default: 0.85;
+  --particle-opacity-active: 1;
+  --particle-fade-duration: 0.4s;
+  --hover-scale: 1;
+}
+
+/* === Theme Sync === */
+body.dark-mode {
+  --blob-fill: #ff4081;
+}
+
+/* === Blob Morph SVG === */
+.svg-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: visible;
+  aspect-ratio: 1 / 1;
+}
+
+svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  overflow: visible;
+}
+
+path,
+.blob-icon {
+  fill: var(--blob-fill);
+  transition: fill 0.3s ease, transform 0.4s ease;
+  transform-origin: center;
+  will-change: transform;
+}
+
+.morph-target {
+  transform-origin: center;
+  will-change: transform;
+}
+
+/* === Particle Trail Canvas === */
+.particle-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 20; /* ⬆️ Must be above .anim__card */
+  pointer-events: none;
+  mix-blend-mode: screen;
+  opacity: var(--particle-opacity-default);
+  transition: opacity var(--particle-fade-duration) ease;
+}
+
+
+.anim__card:hover .particle-bg,
+.anim__card:active .particle-bg {
+  opacity: var(--particle-opacity-active);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .particle-bg {
+    transition: none;
+  }
+}
+
+/* === Resume Tilt Card === */
+.resume-tilt {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 10;
+}
+
+.resume-tilt .tilt-card {
+  perspective: 1000px;
+  cursor: pointer;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  min-height: 240px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
+}
+
+.resume-tilt .tilt-card:hover {
+  --hover-scale: 1.03;
+  transform: scale(var(--hover-scale));
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.35);
+}
+
+.resume-tilt .tilt-inner {
+  background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+  color: white;
+  border-radius: 12px;
+  padding: 2rem;
+  transform-style: preserve-3d;
+  transform-origin: center;
+  transform: rotateX(0deg) rotateY(0deg) scale(1.07);
+  transition: transform 0.2s ease;
+  will-change: transform;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  box-sizing: border-box;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  backface-visibility: hidden;
+}
+
+.resume-tilt .anim__title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.resume-tilt .anim__meta {
+  font-size: 1rem;
+  opacity: 0.85;
+}
+
+/* === Displacement SVG === */
+.displacement-svg {
+  width: 100%;
+  height: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+  display: block;
+}
+
+/* === Marquee Card Polish === */
+.anim__card .marquee-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 1.5rem;
+  background: linear-gradient(to right, #f0f4ff, #e0f7ff);
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.anim__card .marquee-track {
+  display: inline-block;
+  animation: scroll-left 18s linear infinite;
+  font-size: 1.1rem;
+  color: #1e3a8a;
+  white-space: nowrap;
+  font-weight: 600;
+}
+
+.anim__card .marquee-track span {
+  margin: 0 1.25rem;
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.anim__card .marquee-track span:hover {
+  transform: scale(1.1);
+  color: #3b82f6;
+}
+
+
+@keyframes scroll-left {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+
 /* === Responsive Tweaks === */
 @media (max-width: 768px) {
   .anim__grid {
@@ -730,81 +910,6 @@ body.physGunEquipped {
     height: 220px;
   }
 }
-:root {
-  --particle-opacity-default: 0.85;
-  --particle-opacity-active: 1;
-  --particle-fade-duration: 0.4s;
-}
-
-.particle-bg {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
-  pointer-events: none;
-  mix-blend-mode: screen;
-  opacity: var(--particle-opacity-default);
-  transition: opacity var(--particle-fade-duration) ease;
-}
-
-/* Hover for desktop */
-.anim__card:hover .particle-bg {
-  opacity: var(--particle-opacity-active);
-}
-
-/* Touch-friendly tap for mobile */
-.anim__card:active .particle-bg {
-  opacity: var(--particle-opacity-active);
-}
-
-/* Respect reduced motion settings */
-@media (prefers-reduced-motion: reduce) {
-  .particle-bg {
-    transition: none;
-  }
-}
-/* 🔵 Blob Morph SVG */
-.svg-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: visible;
-  aspect-ratio: 1 / 1;
-}
-
-svg {
-  width: 100%;
-  height: auto;
-  display: block;
-  overflow: visible;
-}
-
-/* 🎨 Blob Path Styling */
-:root {
-  --blob-fill: #00bcd4;
-}
-
-path,
-.blob-icon {
-  fill: var(--blob-fill);
-  transition: fill 0.3s ease, transform 0.4s ease;
-  transform-origin: center;
-  will-change: transform;
-}
-
-/* 🌗 Theme Sync */
-body.dark-mode {
-  --blob-fill: #ff4081;
-}
-
-
-.morph-target {
-  transform-origin: center;
-  will-change: transform;
-}
-
 
 /*
 
