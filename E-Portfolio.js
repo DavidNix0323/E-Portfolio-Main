@@ -218,6 +218,31 @@ function resetPhysElementsToRest() {
       unequipGun();
     }
   });
+  // --- mobile touch support ---
+gravgunZone.addEventListener("touchstart", (e) => {
+  if (!gravityGunActive) return;
+  const touch = e.touches[0];
+  lastMouse = { x: touch.clientX, y: touch.clientY };
+  held = true;
+  document.body.classList.add("holding");
+  e.preventDefault();
+});
+
+gravgunZone.addEventListener("touchmove", (e) => {
+  if (!gravityGunActive || !held) return;
+  const touch = e.touches[0];
+  const dx = touch.clientX - lastMouse.x;
+  const dy = touch.clientY - lastMouse.y;
+  velocity = { x: dx, y: dy };
+  lastMouse = { x: touch.clientX, y: touch.clientY };
+  e.preventDefault();
+});
+
+gravgunZone.addEventListener("touchend", () => {
+  held = null;
+  document.body.classList.remove("holding");
+});
+
 
   // --- ESC to unequip ---
   document.addEventListener("keydown", (e) => {

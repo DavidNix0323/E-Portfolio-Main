@@ -10,7 +10,6 @@ html {
   scroll-behavior: smooth;
 }
 
-
 li {
   list-style-type: none;
 }
@@ -518,8 +517,7 @@ MODAL
   overflow: hidden;
   background: #0f1115;
   box-shadow: 0 16px 60px rgba(0, 0, 0, 0.45);
-  transition:
-    transform 700ms cubic-bezier(0.22, 1, 0.36, 1) var(--delay, 0ms),
+  transition: transform 700ms cubic-bezier(0.22, 1, 0.36, 1) var(--delay, 0ms),
     opacity 700ms ease var(--delay, 0ms);
   will-change: transform, opacity;
   perspective: 900px;
@@ -680,7 +678,6 @@ body.physGunEquipped {
   transition: left 0.6s ease, top 0.6s ease, transform 0.6s ease;
 }
 
-
 /* === Fire / Recoil FX === */
 .physElement.fired {
   animation: firedPulse 0.4s ease-out;
@@ -688,15 +685,24 @@ body.physGunEquipped {
 }
 
 @keyframes firedPulse {
-  0%   { transform: scale(1) rotate(0deg); }
-  40%  { transform: scale(1.2) rotate(15deg); }
-  100% { transform: scale(1) rotate(0deg); }
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+  40% {
+    transform: scale(1.2) rotate(15deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
 }
 
 /* === Trigger Highlight === */
 #gravityGunTrigger.active {
   transform: scale(1.08);
   filter: drop-shadow(0 0 14px #00ffff);
+}
+#gravgun {
+  touch-action: none;
 }
 
 /* === Root Variables === */
@@ -755,7 +761,6 @@ path,
   opacity: var(--particle-opacity-default);
   transition: opacity var(--particle-fade-duration) ease;
 }
-
 
 .anim__card:hover .particle-bg,
 .anim__card:active .particle-bg {
@@ -893,7 +898,6 @@ path,
   }
 }
 
-
 /* === Responsive Tweaks === */
 @media (max-width: 768px) {
   .anim__grid {
@@ -1016,7 +1020,6 @@ PROJECTS
   margin: 16px 0;
 }
 
-
 /*
  
 FOOTER 
@@ -1130,7 +1133,7 @@ SHAPES
     width: 100%;
     flex-direction: column-reverse;
     border-radius: 0%;
-    overflow-y: auto
+    overflow-y: auto;
   }
 
   .modal__half {
@@ -1140,34 +1143,55 @@ SHAPES
 
 @media (max-width: 480px) {
   .title {
-    font-size: 52px;
+    font-size: 36px;
+    line-height: 1.2;
     max-width: 100%;
     word-wrap: break-word;
+    margin: 0 auto;
   }
 
   .header__para {
-    font-size: 16px;
+    font-size: 14px;
+    line-height: 1.4;
+    padding: 0 1rem;
   }
 
   .nav__link:first-child {
     display: none;
   }
-  .project__description--para {
-    display: none;
-  }
 
-  .project__description {
-    left: 0;
-    padding: 0;
-    width: 100%;
-    text-align: center;
-  }
+  @media (max-width: 480px) {
+    .title {
+      font-size: 52px;
+    }
 
-  .project__description--sub-title {
-    margin-bottom: 8px;
-  }
+    .header__para {
+      font-size: 16px;
+    }
 
-  .modal__half {
-    padding: 40px;
+    .nav__link:first-child {
+      display: none;
+    }
+    .project__description--para {
+      display: none;
+    }
+    .project__description--title {
+      font-size: 20px;
+    }
+
+    .project__description {
+      left: 0;
+      padding: 0;
+      width: 100%;
+      text-align: center;
+    }
+
+    .project__description--sub-title {
+      margin-bottom: 8px;
+    }
+
+    .modal__half {
+      padding: 40px;
+    }
   }
 }
