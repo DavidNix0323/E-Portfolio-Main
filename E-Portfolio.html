@@ -282,28 +282,61 @@
 </li>
 
 
-    <li class="anim__card" style="--delay: 240ms">
-      <img src="./assets/anim-3.jpg" alt="3D card tilt parallax" class="anim__img" />
-      <div class="anim__overlay">
-        <h3 class="anim__title">3D Tilt</h3>
-        <p class="anim__meta">CSS • Pointer</p>
-      </div>
-    </li>
+<li class="anim__card resume-tilt" style="--delay: 240ms">
+  <div class="tilt-card" onclick="window.open('./assets/David-Nix-Resume.pdf', '_blank')">
+    <div class="tilt-inner">
+      <h3 class="anim__title">Resume</h3>
+      <p class="anim__meta">Click to View PDF</p>
+    </div>
+  </div>
+  <div class="anim__overlay">
+    <h3 class="anim__title">3D Tilt Resume</h3>
+    <p class="anim__meta">CSS • JS • Interactivity</p>
+  </div>
+</li>
 
-    <li class="anim__card" style="--delay: 320ms">
-      <img src="./assets/anim-4.jpg" alt="Noise displacement shader" class="anim__img" />
-      <div class="anim__overlay">
-        <h3 class="anim__title">Displacement</h3>
-        <p class="anim__meta">WebGL • GLSL</p>
-      </div>
-    </li>
 
-    <li class="anim__card" style="--delay: 400ms">
-      <img src="./assets/anim-5.jpg" alt="Scroll-linked marquee" class="anim__img" />
-      <div class="anim__overlay">
-        <h3 class="anim__title">Marquee Link</h3>
-        <p class="anim__meta">CSS • Scroll</p>
-      </div>
+
+
+<li class="anim__card" style="--delay: 320ms">
+  <svg class="anim__img displacement-svg" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice">
+    <filter id="displacementFilter">
+      <feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="3" result="turbulence" />
+      <feDisplacementMap in2="turbulence" in="SourceGraphic" scale="30" xChannelSelector="R" yChannelSelector="G" />
+    </filter>
+    <image href="./assets/anim-4.jpg" width="100%" height="100%" filter="url(#displacementFilter)" />
+  </svg>
+  <div class="anim__overlay">
+    <h3 class="anim__title">Displacement</h3>
+    <p class="anim__meta">SVG • Filter</p>
+  </div>
+</li>
+
+
+<li class="anim__card marquee-card" style="--delay: 400ms; position: relative;">
+  <canvas id="particleCanvas" class="particle-bg"></canvas>
+
+  <div class="marquee-wrapper">
+    <div class="marquee-track">
+      <span>React ⚛️</span>
+      <span>Next.js 🚀</span>
+      <span>Tailwind 💨</span>
+      <span>Zustand 🧠</span>
+      <span>Firebase 🔥</span>
+      <span>Clerk 🔐</span>
+      <span>MongoDB 🍃</span>
+      <span>AUTH 🏫</span>
+    </div>
+  </div>
+
+  <div class="anim__overlay">
+    <h3 class="anim__title">Marquee Link</h3>
+    <p class="anim__meta">CSS • Scroll</p>
+  </div>
+</li>
+
+
+      
     </li>
   </ul>
 </section>
