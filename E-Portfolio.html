@@ -4,13 +4,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/16327/MorphSVGPlugin3.min.js"></script>
 
-
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>David Nix</title>
     <link rel="icon" href="/assets/favicon.ico" />
-
-
 
     <link rel="stylesheet" href="E-Portfolio.css" />
     <script
@@ -89,7 +86,10 @@
             <a href="#" class="social__link click">
               <i class="fab fa-linkedin"></i>
             </a>
-            <a href="https://github.com/DavidNix0323" class="social__link click">
+            <a
+              href="https://github.com/DavidNix0323"
+              class="social__link click"
+            >
               <i class="fab fa-github"></i>
             </a>
             <a
@@ -103,9 +103,9 @@
         </div>
       </header>
       <a href="#">
-      <button class="mail__btn click" onclick="toggleModal()">
-        <i class="fa-solid fa-envelope"></i>
-      </button>
+        <button class="mail__btn click" onclick="toggleModal()">
+          <i class="fa-solid fa-envelope"></i>
+        </button>
       </a>
       <a href="#projects" class="scroll">
         <div class="scroll__icon click"></div>
@@ -216,141 +216,182 @@
       <img src="./assets/semi circle.svg" class="shape shape--8" />
     </section>
 
-
-    
     <!-- Fullscreen Gravity Gun Zone (moved ABOVE the gallery) -->
-<div id="gravgun">
-  <!-- Floating Cursor Gun -->
-  <img id="gravityGunCursor" class="gravity-gun-cursor" alt="Gravity Gun Cursor" />
+    <div id="gravgun">
+      <!-- Floating Cursor Gun -->
+      <img
+        id="gravityGunCursor"
+        class="gravity-gun-cursor"
+        alt="Gravity Gun Cursor"
+      />
 
-  <!-- Example draggable elements -->
-  <div class="physElement" style="left: 20%; top: 30%;">📦</div>
-  <div class="physElement" style="left: 50%; top: 50%;">🔵</div>
-  <div class="physElement" style="left: 70%; top: 20%;">⭐</div>
-</div>
-
-<!-- Animation Gallery Section -->
-<section id="animation-gallery" class="section">
-  <h2 class="section__title">Animation Gallery</h2>
-
-  <ul class="anim__grid">
-    <!-- Gravity Gun Card -->
-    <li class="anim__card gravity-gun-card gravity-gun-highlight" style="--delay: 0ms">
-      <div id="gravityGunTrigger" class="gravity-gun-trigger">
-        <img
-          id="gravityGunImage"
-          src="./assets/gravgun-outline.png"
-          alt="Gravity Gun"
-          class="anim__img gravity-gun-img"
-        />
-        <div class="anim__overlay">
-          <h3 class="anim__title">Gravity Gun Demo</h3>
-          <p class="anim__meta">Canvas • JS • Physics</p>
-        </div>
-      </div>
-    </li>
-
-   <!-- Other Animation Cards -->
-<li class="anim__card" style="--delay: 80ms; position: relative;">
-  <canvas id="particleCanvas" class="particle-bg"></canvas>
-
-  <div class="anim__overlay">
-    <h3 class="anim__title">Particle Trails</h3>
-    <p class="anim__meta">Canvas • JS • Perlin Noise</p>
-  </div>
-</li>
-
-    
-    
-
-<li class="anim__card" style="--delay: 160ms">
-  <div class="anim__svg-wrapper">
-    <svg id="blobMorph" viewBox="0 0 600 600" width="100%" height="100%">
-      <path id="blobPath" fill="url(#blobGradient)" d="M300,300 C400,200 500,400 300,500 C100,400 200,200 300,300 Z"/>
-      <defs>
-        <radialGradient id="blobGradient" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stop-color="cyan" />
-          <stop offset="100%" stop-color="blue" />
-        </radialGradient>
-      </defs>
-    </svg>
-  </div>
-  <div class="anim__overlay">
-    <h3 class="anim__title">Blob Morph</h3>
-    <p class="anim__meta">SVG • GSAP</p>
-  </div>
-</li>
-
-
-<li class="anim__card resume-tilt" style="--delay: 240ms">
-  <div class="tilt-card" onclick="window.open('./assets/David-Nix-Resume.pdf', '_blank')">
-    <div class="tilt-inner">
-      <h3 class="anim__title">Resume</h3>
-      <p class="anim__meta">Click to View PDF</p>
+      <!-- Example draggable elements -->
+      <div class="physElement" style="left: 20%; top: 30%">📦</div>
+      <div class="physElement" style="left: 50%; top: 50%">🔵</div>
+      <div class="physElement" style="left: 70%; top: 20%">⭐</div>
     </div>
-  </div>
-  <div class="anim__overlay">
-    <h3 class="anim__title">3D Tilt Resume</h3>
-    <p class="anim__meta">CSS • JS • Interactivity</p>
-  </div>
-</li>
 
+    <!-- Animation Gallery Section -->
+    <section id="animation-gallery" class="section">
+      <h2 class="section__title">Animation Gallery</h2>
 
+      <ul class="anim__grid">
+        <!-- Gravity Gun Card -->
+        <li
+          class="anim__card gravity-gun-card gravity-gun-highlight"
+          style="--delay: 0ms"
+        >
+          <div id="gravityGunTrigger" class="gravity-gun-trigger">
+            <img
+              id="gravityGunImage"
+              src="./assets/gravgun-outline.png"
+              alt="Gravity Gun"
+              class="anim__img gravity-gun-img"
+            />
+            <div class="anim__overlay">
+              <h3 class="anim__title">Gravity Gun Demo</h3>
+              <p class="anim__meta">Canvas • JS • Physics</p>
+            </div>
+          </div>
+        </li>
 
+        <!-- Other Animation Cards -->
+        <li class="anim__card" style="--delay: 80ms; position: relative">
+          <canvas id="particleCanvas" class="particle-bg"></canvas>
 
-<li class="anim__card" style="--delay: 320ms">
-  <svg class="anim__img displacement-svg" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice">
-    <filter id="displacementFilter">
-      <feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="3" result="turbulence" />
-      <feDisplacementMap in2="turbulence" in="SourceGraphic" scale="30" xChannelSelector="R" yChannelSelector="G" />
-    </filter>
-    <image href="./assets/anim-4.jpg" width="100%" height="100%" filter="url(#displacementFilter)" />
-  </svg>
-  <div class="anim__overlay">
-    <h3 class="anim__title">Displacement</h3>
-    <p class="anim__meta">SVG • Filter</p>
-  </div>
-</li>
+          <div class="anim__overlay">
+            <h3 class="anim__title">Particle Trails</h3>
+            <p class="anim__meta">Canvas • JS • Perlin Noise</p>
+          </div>
+        </li>
 
+        <li class="anim__card" style="--delay: 160ms">
+          <div class="anim__svg-wrapper">
+            <svg
+              id="blobMorph"
+              viewBox="0 0 600 600"
+              width="100%"
+              height="100%"
+            >
+              <path
+                id="blobPath"
+                fill="url(#blobGradient)"
+                d="M300,300 C400,200 500,400 300,500 C100,400 200,200 300,300 Z"
+              />
+              <defs>
+                <radialGradient id="blobGradient" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="cyan" />
+                  <stop offset="100%" stop-color="blue" />
+                </radialGradient>
+              </defs>
+            </svg>
+          </div>
+          <div class="anim__overlay">
+            <h3 class="anim__title">Blob Morph</h3>
+            <p class="anim__meta">SVG • GSAP</p>
+          </div>
+        </li>
 
-<li class="anim__card marquee-card" style="--delay: 400ms; position: relative;">
-  <canvas id="particleCanvas" class="particle-bg"></canvas>
+        <li class="anim__card resume-tilt" style="--delay: 240ms">
+          <div
+            class="tilt-card"
+            onclick="window.open('./assets/David-Nix-Resume.pdf', '_blank')"
+          >
+            <div class="tilt-inner">
+              <h3 class="anim__title">Resume</h3>
+              <p class="anim__meta">Click to View PDF</p>
+            </div>
+          </div>
+          <div class="anim__overlay">
+            <h3 class="anim__title">3D Tilt Resume</h3>
+            <p class="anim__meta">CSS • JS • Interactivity</p>
+          </div>
+        </li>
 
-  <div class="marquee-wrapper">
-    <div class="marquee-track">
-      <span>React ⚛️</span>
-      <span>Next.js 🚀</span>
-      <span>Tailwind 💨</span>
-      <span>Zustand 🧠</span>
-      <span>Firebase 🔥</span>
-      <span>Clerk 🔐</span>
-      <span>MongoDB 🍃</span>
-      <span>AUTH 🏫</span>
-    </div>
-  </div>
+        <li class="anim__card" style="--delay: 320ms">
+          <svg
+            class="anim__img displacement-svg"
+            viewBox="0 0 400 500"
+            preserveAspectRatio="xMidYMid slice"
+          >
+            <filter id="displacementFilter">
+              <feTurbulence
+                type="turbulence"
+                baseFrequency="0.02"
+                numOctaves="3"
+                result="turbulence"
+              />
+              <feDisplacementMap
+                in2="turbulence"
+                in="SourceGraphic"
+                scale="30"
+                xChannelSelector="R"
+                yChannelSelector="G"
+              />
+            </filter>
+            <image
+              href="./assets/anim-4.jpg"
+              width="100%"
+              height="100%"
+              filter="url(#displacementFilter)"
+            />
+          </svg>
+          <div class="anim__overlay">
+            <h3 class="anim__title">Displacement</h3>
+            <p class="anim__meta">SVG • Filter</p>
+          </div>
+        </li>
 
-  <div class="anim__overlay">
-    <h3 class="anim__title">Marquee Link</h3>
-    <p class="anim__meta">CSS • Scroll</p>
-  </div>
-</li>
+        <li
+          class="anim__card marquee-card"
+          style="--delay: 400ms; position: relative"
+        >
+          <canvas id="particleCanvas" class="particle-bg"></canvas>
 
+          <div class="marquee-wrapper">
+            <div class="marquee-track">
+                  <span>HTML 🧱</span>
+                  <span>CSS 🎨</span>
+                  <span>JavaScript 🟨</span>
+                  <span>React ⚛️</span>
+                  <span>Next.js 🚀</span>
+                  <span>TypeScript 🧩</span>
+                  <span>Tailwind 💨</span>
+                  <span>Zustand 🧠</span>
+                  <span>Firebase 🔥</span>
+                  <span>MongoDB 🍃</span>
+                  <span>Clerk 🔐</span>
+                  <span>Web3 🪙</span>
+                  <span>Canvas 🖌️</span>
+                  <span>SVG 🧬</span>
+                  <span>Physics 🧲</span>
+                  <span>Framer Motion 🎞️</span>
+                  <span>GSAP 🌀</span>
+                  <span>OpenRouter 🤖</span>
+                  <span>AUTH 🏫</span>
+                  <span>API Integration 🌐</span>
+                  <span>Perlin Noise 🌊</span>
+                  <span>DOM Forces 🪐</span>
+                  <span>Modular Hooks 🧵</span>
+                  <span>Error Handling 🧯</span>
+            </div>
+          </div>
 
-      
-    </li>
-  </ul>
-</section>
-    
-    
-    
+          <div class="anim__overlay">
+            <h3 class="anim__title">Marquee Link</h3>
+            <p class="anim__meta">CSS • Scroll</p>
+          </div>
+        </li>
+      </ul>
+    </section>
+
     <section id="projects">
       <div class="container">
         <div class="row">
           <h1 class="section__title">
             Here are some of my <span class="secondary">projects</span>
           </h1>
-         <ul class="project__list project__grid">
-
+          <ul class="project__list project__grid">
             <li class="project">
               <div class="project__wrapper">
                 <img
@@ -360,22 +401,33 @@
                 />
                 <div class="project__wrapper--bg"></div>
                 <div class="project__description">
-                  <h3 class="project__description--title">
-                    Game Search Hub
-                  </h3>
+                  <h3 class="project__description--title">Game Search Hub</h3>
                   <h4 class="project__description--sub-title">
                     HTML • CSS • JavaScript
                   </h4>
                   <br />
                   <p class="project__description--para">
-                    A Game Search Hub built with an external API that helps users easily discover and compare the best game deals. This project highlights my ability to integrate APIs, handle dynamic data, and design a responsive, user-friendly interface that makes finding great deals simple and engaging.
+                    A Game Search Hub built with an external API that helps
+                    users easily discover and compare the best game deals. This
+                    project highlights my ability to integrate APIs, handle
+                    dynamic data, and design a responsive, user-friendly
+                    interface that makes finding great deals simple and
+                    engaging.
                   </p>
                   <br />
                   <div class="project__description--links">
-                    <a href="https://github.com/DavidNix0323/game-search-hub" target="_blank" class="project__description--link">
+                    <a
+                      href="https://github.com/DavidNix0323/game-search-hub"
+                      target="_blank"
+                      class="project__description--link"
+                    >
                       <i class="fab fa-github"></i>
                     </a>
-                    <a href="https://game-search-hub.vercel.app/" target="_blank" class="project__description--link">
+                    <a
+                      href="https://game-search-hub.vercel.app/"
+                      target="_blank"
+                      class="project__description--link"
+                    >
                       <i class="fas fa-link"></i>
                     </a>
                   </div>
@@ -384,29 +436,36 @@
             </li>
             <li class="project">
               <div class="project__wrapper">
-                <img
-                  src="./assets/netflix.png"
-                  class="project__img"
-                  alt=""
-                />
+                <img src="./assets/netflix.png" class="project__img" alt="" />
                 <div class="project__wrapper--bg"></div>
                 <div class="project__description">
-                  <h3 class="project__description--title">
-                    Netflix Clone
-                  </h3>
+                  <h3 class="project__description--title">Netflix Clone</h3>
                   <h4 class="project__description--sub-title">
-                    HTML •  CSS • JavaScript • React •  Vite • Firebase
+                    HTML • CSS • JavaScript • React • Vite • Firebase
                   </h4>
                   <br />
                   <p class="project__description--para">
-                    A Netflix-style streaming platform built with Firebase, featuring user authentication, real-time database integration, and dynamic movie/TV show browsing powered by an API. This project highlights my ability to recreate a polished, responsive UI while implementing secure login, data handling, and seamless content delivery
+                    A Netflix-style streaming platform built with Firebase,
+                    featuring user authentication, real-time database
+                    integration, and dynamic movie/TV show browsing powered by
+                    an API. This project highlights my ability to recreate a
+                    polished, responsive UI while implementing secure login,
+                    data handling, and seamless content delivery
                   </p>
                   <br />
                   <div class="project__description--links">
-                    <a href="https://github.com/DavidNix0323/netflix-clone" target="_blank" class="project__description--link">
+                    <a
+                      href="https://github.com/DavidNix0323/netflix-clone"
+                      target="_blank"
+                      class="project__description--link"
+                    >
                       <i class="fab fa-github"></i>
                     </a>
-                    <a href="https://netflix-clone-iota-roan.vercel.app/" target="_blank" class="project__description--link">
+                    <a
+                      href="https://netflix-clone-iota-roan.vercel.app/"
+                      target="_blank"
+                      class="project__description--link"
+                    >
                       <i class="fas fa-link"></i>
                     </a>
                   </div>
@@ -415,40 +474,44 @@
             </li>
             <li class="project">
               <div class="project__wrapper">
-                <img
-                  src="./assets/Amazon.png"
-                  class="project__img"
-                  alt=""
-                />
+                <img src="./assets/Amazon.png" class="project__img" alt="" />
                 <div class="project__wrapper--bg"></div>
                 <div class="project__description">
                   <h3 class="project__description--title">
                     Amazon Clone – Fullstack E-Commerce Experience
                   </h3>
                   <h4 class="project__description--sub-title">
-                    Next.js 14 • Firebase Auth & Firestore • Stripe Checkout • Tailwind CSS
+                    Next.js 14 • Firebase Auth & Firestore • Stripe Checkout •
+                    Tailwind CSS
                   </h4>
                   <br />
                   <p class="project__description--para">
-                    A recruiter-grade Amazon clone built with a modern fullstack stack. 
-                    Features include secure authentication with Firebase, product browsing 
-                    powered by Firestore, a persistent shopping cart, and real payments 
-                    through Stripe Checkout with webhook handling. Designed with responsive 
-                    layouts and reusable components for scalability and a professional 
-                    e-commerce experience.
+                    A recruiter-grade Amazon clone built with a modern fullstack
+                    stack. Features include secure authentication with Firebase,
+                    product browsing powered by Firestore, a persistent shopping
+                    cart, and real payments through Stripe Checkout with webhook
+                    handling. Designed with responsive layouts and reusable
+                    components for scalability and a professional e-commerce
+                    experience.
                   </p>
                   <br />
                   <div class="project__description--links">
-                    <a href="https://github.com/DavidNix0323/amazon-clone" target="_blank" class="project__description--link">
+                    <a
+                      href="https://github.com/DavidNix0323/amazon-clone"
+                      target="_blank"
+                      class="project__description--link"
+                    >
                       <i class="fab fa-github"></i>
                     </a>
-                    <a href="https://amazon-clone-eight-smoky.vercel.app/" target="_blank" class="project__description--link">
+                    <a
+                      href="https://amazon-clone-eight-smoky.vercel.app/"
+                      target="_blank"
+                      class="project__description--link"
+                    >
                       <i class="fas fa-link"></i>
                     </a>
                   </div>
                 </div>
-                
-              
               </div>
             </li>
             <li class="project">
@@ -461,34 +524,44 @@
                 <div class="project__wrapper--bg"></div>
                 <div class="project__description">
                   <h3 class="project__description--title">
-                    CryptoPlatform – Advanced Cryptocurrency Analytics & Portfolio Management
+                    CryptoPlatform – Advanced Cryptocurrency Analytics &
+                    Portfolio Management
                   </h3>
                   <h4 class="project__description--sub-title">
                     Next.js • TypeScript • Tailwind CSS • Firebase • Web3
                   </h4>
                   <br />
                   <p class="project__description--para">
-                    A full-stack cryptocurrency platform that lets users track, analyze, 
-                    and manage digital assets in real-time. Built with Web3 integration 
-                    for wallet connectivity, Firebase authentication for secure logins, 
-                    and Firestore for data persistence. Includes advanced portfolio 
-                    tracking, trending market data, DeFi insights, and personalized 
-                    dashboards — all wrapped in a modern, responsive UI powered by 
-                    Tailwind CSS and TypeScript.
+                    A full-stack cryptocurrency platform that lets users track,
+                    analyze, and manage digital assets in real-time. Built with
+                    Web3 integration for wallet connectivity, Firebase
+                    authentication for secure logins, and Firestore for data
+                    persistence. Includes advanced portfolio tracking, trending
+                    market data, DeFi insights, and personalized dashboards —
+                    all wrapped in a modern, responsive UI powered by Tailwind
+                    CSS and TypeScript.
                   </p>
                   <br />
                   <div class="project__description--links">
-                    <a href="https://github.com/DavidNix0323/crypto-platform" target="_blank" class="project__description--link">
+                    <a
+                      href="https://github.com/DavidNix0323/crypto-platform"
+                      target="_blank"
+                      class="project__description--link"
+                    >
                       <i class="fab fa-github"></i>
                     </a>
-                    <a href="https://crypto-hub-gray.vercel.app/" target="_blank" class="project__description--link">
+                    <a
+                      href="https://crypto-hub-gray.vercel.app/"
+                      target="_blank"
+                      class="project__description--link"
+                    >
                       <i class="fas fa-link"></i>
                     </a>
                   </div>
                 </div>
               </div>
             </li>
-            
+
             <li class="project">
               <div class="project__wrapper">
                 <img
@@ -502,30 +575,41 @@
                     DeepSeek Clone – AI Chat Platform with OpenRouter Fallback
                   </h3>
                   <h4 class="project__description--sub-title">
-                    Next.js 15 • React • Clerk Auth • Tailwind CSS • OpenRouter API
+                    Next.js 15 • React • Clerk Auth • Tailwind CSS • OpenRouter
+                    API
                   </h4>
                   <br />
                   <p class="project__description--para">
-                    A modern AI chat application inspired by DeepSeek. Built with Next.js 15 
-                    and Clerk authentication for secure user management, this project 
-                    integrates the official DeepSeek API with OpenRouter as a fallback for 
-                    reliability. Features include real-time conversations, context-aware 
-                    memory, responsive design with Tailwind CSS, and a modular architecture 
-                    (hooks, context, models) designed for scalability and clean maintainable code.
+                    A modern AI chat application inspired by DeepSeek. Built
+                    with Next.js 15 and Clerk authentication for secure user
+                    management, this project integrates the official DeepSeek
+                    API with OpenRouter as a fallback for reliability. Features
+                    include real-time conversations, context-aware memory,
+                    responsive design with Tailwind CSS, and a modular
+                    architecture (hooks, context, models) designed for
+                    scalability and clean maintainable code.
                   </p>
                   <br />
                   <div class="project__description--links">
-                    <a href="https://github.com/DavidNix0323/deepseek-clone" target="_blank" class="project__description--link">
+                    <a
+                      href="https://github.com/DavidNix0323/deepseek-clone"
+                      target="_blank"
+                      class="project__description--link"
+                    >
                       <i class="fab fa-github"></i>
                     </a>
-                    <a href="https://deep-seek-clone-zeta-six.vercel.app/" target="_blank" class="project__description--link">
+                    <a
+                      href="https://deep-seek-clone-zeta-six.vercel.app/"
+                      target="_blank"
+                      class="project__description--link"
+                    >
                       <i class="fas fa-link"></i>
                     </a>
                   </div>
                 </div>
               </div>
             </li>
-            
+
             <li class="project">
               <div class="project__wrapper">
                 <img
@@ -543,25 +627,124 @@
                   </h4>
                   <br />
                   <p class="project__description--para">
-                    A fast and responsive YouTube clone built with React and Vite. 
-                    Features include dynamic video rendering, channel-style layouts, 
-                    interactive previews, and a streamlined user interface styled with CSS. 
-                    Optimized for performance with Vite HMR, this project highlights my 
-                    ability to build scalable front-end applications with modern tooling.
+                    A fast and responsive YouTube clone built with React and
+                    Vite. Features include dynamic video rendering,
+                    channel-style layouts, interactive previews, and a
+                    streamlined user interface styled with CSS. Optimized for
+                    performance with Vite HMR, this project highlights my
+                    ability to build scalable front-end applications with modern
+                    tooling.
                   </p>
                   <br />
                   <div class="project__description--links">
-                    <a href="https://github.com/DavidNix0323/youtube-clone" target="_blank" class="project__description--link">
+                    <a
+                      href="https://github.com/DavidNix0323/youtube-clone"
+                      target="_blank"
+                      class="project__description--link"
+                    >
                       <i class="fab fa-github"></i>
                     </a>
-                    <a href="https://you-tube-clone-seven-tawny.vercel.app/" target="_blank" class="project__description--link">
+                    <a
+                      href="https://you-tube-clone-seven-tawny.vercel.app/"
+                      target="_blank"
+                      class="project__description--link"
+                    >
                       <i class="fas fa-link"></i>
                     </a>
                   </div>
                 </div>
               </div>
             </li>
-            
+            <li class="project">
+              <div class="project__wrapper">
+                <img
+                  src="./assets/skinstrict-ai.png"
+                  class="project__img"
+                  alt="Skinstrict-AI"
+                />
+                <div class="project__wrapper--bg"></div>
+                <div class="project__description">
+                  <h3 class="project__description--title">
+                    Skinstric-AI – AI-Powered Skincare Advisor
+                  </h3>
+                  <h4 class="project__description--sub-title">
+                    Typescript • Next • JavaScript • Tailwind CSS
+                  </h4>
+                  <br />
+                  <p class="project__description--para">
+                    A paid rebuild of a commercial skincare platform that uses
+                    AI to generate personalized routines. I reverse-engineered
+                    the original flow and rebuilt the frontend from scratch
+                    using Next.js 15, with modular architecture, animated
+                    transitions, and API-backed data storage.
+                  </p>
+                  <br />
+                  <div class="project__description--links">
+                    <a
+                      href="https://github.com/DavidNix0323/Skinstric-AI"
+                      target="_blank"
+                      class="project__description--link"
+                    >
+                      <i class="fab fa-github"></i>
+                    </a>
+                    <a
+                      href="https://vercel.com/david-nixs-projects-df40a079/skinstric-ai"
+                      target="_blank"
+                      class="project__description--link"
+                    >
+                      <i class="fas fa-link"></i>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li class="project">
+              <div class="project__wrapper">
+                <img
+                  src="./assets/Ultraverse NFT.png"
+                  class="project__img"
+                  alt="Ultraverse NFT Screenshot"
+                />
+                <div class="project__wrapper--bg"></div>
+                <div class="project__description">
+                  <h3 class="project__description--title">
+                    Ultraverse NFT World
+                  </h3>
+                  <h4 class="project__description--sub-title">
+                    HTML • JavaScript • CSS
+                  </h4>
+                  <br />
+                  <p class="project__description--para">
+                    Project from my Frontend Simplified internship, where I
+                    transformed a static design into a fully interactive web
+                    experience using HTML, CSS, and vanilla JavaScript.
+                    Implemented dynamic features with libraries such as Axios
+                    for API data fetching, Owl Carousel for responsive sliders,
+                    and Animate on Scroll for smooth, engaging transitions.
+                    Followed best practices for version control by working in
+                    feature branches, submitting pull requests, and managing the
+                    codebase through GitHub.
+                  </p>
+                  <br />
+                  <div class="project__description--links">
+                    <a
+                      href="https://github.com/DavidNix0323/david-internship"
+                      target="_blank"
+                      class="project__description--link"
+                    >
+                      <i class="fab fa-github"></i>
+                    </a>
+                    <a
+                      href="https://david-internship-4hqq.vercel.app/"
+                      target="_blank"
+                      class="project__description--link"
+                    >
+                      <i class="fas fa-link"></i>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </li>
           </ul>
         </div>
       </div>
@@ -579,24 +762,28 @@
           </figure>
           <div class="footer__social--list">
             <a
-              href="https://github.com/DavidNix0323"  target="_blank"
+              href="https://github.com/DavidNix0323"
+              target="_blank"
               class="footer__social--link link__hover-effect link__hover-effect--white"
             >
               Github
             </a>
             <a
-              href="#"  target="_blank"
+              href="#"
+              target="_blank"
               class="footer__social--link link__hover-effect link__hover-effect--white"
             >
               LinkedIn
             </a>
             <a
-              href="./assets/David Nix Resume.pdf" target="_blank"
+              href="./assets/David Nix Resume.pdf"
+              target="_blank"
               class="footer__social--link link__hover-effect link__hover-effect--white"
               >Resume
             </a>
             <a
-              href="#" target="_blank"
+              href="#"
+              target="_blank"
               onclick="toggleModal()"
               class="footer__social--link link__hover-effect link__hover-effect--white"
             >

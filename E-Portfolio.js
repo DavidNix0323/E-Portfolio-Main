@@ -40,15 +40,16 @@ const GUN_FACING = { x: 1, y: 0 };
 
 // --- store original positions once (keep % values from HTML) ---
 const originalPositions = new Map();
-document.querySelectorAll(".physElement").forEach((el) => {
-  const left = el.style.left || el.getAttribute("data-left") || "0%";
-  const top = el.style.top || el.getAttribute("data-top") || "0%";
 
-  originalPositions.set(el, {
-    left,
-    top,
-  });
+document.querySelectorAll(".physElement").forEach((el) => {
+  // ✅ Always read the authored percentage values from inline styles or data attributes
+  const left = el.getAttribute("data-left") || el.style.left || "0%";
+  const top  = el.getAttribute("data-top")  || el.style.top  || "0%";
+
+  // Save as percentages (not px), so we can restore them later on unequip
+  originalPositions.set(el, { left, top });
 });
+
 
 // --- helpers ---
 function setGunState(state) {
@@ -82,19 +83,20 @@ function resetPhysElementsToRest() {
     if (orig) {
       // Smooth float-back into original % coords
       el.style.transition = "left 0.6s ease, top 0.6s ease, transform 0.6s ease";
-      el.style.position = "absolute"; // keep absolute so it doesn’t drop in flow
+
+      // ⬇️ Return them to authored state
+      el.style.position = "absolute"; 
       el.style.left = orig.left;
       el.style.top = orig.top;
+      el.style.margin = "";
+      el.style.transform = "";
+      el.style.zIndex = "";
     }
 
     setTimeout(() => {
       el.style.transition = "";
-      el.style.transform = "";
-      el.style.zIndex = "";
-      el.style.cursor = "";
+      physicsObjects.delete(el);
     }, 650);
-
-    physicsObjects.delete(el);
   });
 }
 
