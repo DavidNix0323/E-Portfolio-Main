@@ -283,57 +283,51 @@ if (window.matchMedia("(hover: none) and (pointer: coarse)").matches) {
     touchHeld.style.transition = "transform 0.1s ease";
     touchHeld.style.transform = `translate(${x}px, ${y}px) scale(1.2)`;
     setTimeout(() => {
-      touchHeld.style.transform = `translate(${x}px, ${y}px) scale(1)`;
-    }, 100);
+      touchHeld.style.transform = "none";
+      touchHeld.style.transition = "none";
 
-    // --- optional trail burst ---
-    if (typeof spawnTrailBurst === "function") {
-      spawnTrailBurst(x, y, vx, vy);
-    }
+      // --- optional trail burst ---
+      if (typeof spawnTrailBurst === "function") {
+        spawnTrailBurst(x, y, vx, vy);
+      }
 
-    // --- optional launch sound ---
-    if (typeof playLaunchSound === "function") {
-      playLaunchSound();
-    }
+      // --- optional launch sound ---
+      if (typeof playLaunchSound === "function") {
+        playLaunchSound();
+      }
 
-    const launch = () => {
-      vx *= 0.95;
-      vy *= 0.95;
-      x += vx;
-      y += vy;
-      touchHeld.style.transform = `translate(${x}px, ${y}px)`;
-      if (Math.abs(vx) > 0.5 || Math.abs(vy) > 0.5) {
-        requestAnimationFrame(launch);
-      } else {
-        touchHeld.style.pointerEvents = "auto";
-        addPhysicsObject(touchHeld, x, y, vx, vy);
+      // --- physics handoff ---
+      touchHeld.style.left = `${x}px`;
+      touchHeld.style.top = `${y}px`;
+      touchHeld.style.pointerEvents = "auto";
+      addPhysicsObject(touchHeld, x, y, vx, vy);
+      requestAnimationFrame(updatePhysics);
 
-        // --- optional snap zone logic ---
-        const snapZone = document.querySelector(".snapZone");
-        if (snapZone) {
-          const zoneRect = snapZone.getBoundingClientRect();
-          if (
-            x > zoneRect.left &&
-            x < zoneRect.right &&
-            y > zoneRect.top &&
-            y < zoneRect.bottom
-          ) {
-            snapZone.appendChild(touchHeld);
-            touchHeld.style.position = "relative";
-            touchHeld.style.left = "0";
-            touchHeld.style.top = "0";
-            touchHeld.style.transform = "none";
+      // --- optional snap zone logic ---
+      const snapZone = document.querySelector(".snapZone");
+      if (snapZone) {
+        const zoneRect = snapZone.getBoundingClientRect();
+        if (
+          x > zoneRect.left &&
+          x < zoneRect.right &&
+          y > zoneRect.top &&
+          y < zoneRect.bottom
+        ) {
+          snapZone.appendChild(touchHeld);
+          touchHeld.style.position = "relative";
+          touchHeld.style.left = "0";
+          touchHeld.style.top = "0";
+          touchHeld.style.transform = "none";
+          physicsObjects.delete(touchHeld);
 
-            // --- optional snap zone highlight ---
-            snapZone.classList.add("highlight");
-            setTimeout(() => snapZone.classList.remove("highlight"), 300);
-          }
+          // --- optional snap zone highlight ---
+          snapZone.classList.add("highlight");
+          setTimeout(() => snapZone.classList.remove("highlight"), 300);
         }
       }
-    };
+    }, 100); // recoil delay
 
     touchHeld.classList.remove("dragging");
-    launch();
     touchHeld = null;
     document.body.classList.remove("holding");
     setGunState("close");

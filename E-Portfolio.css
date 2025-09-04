@@ -655,6 +655,24 @@ body.gunEquipped .gravity-gun-canvas {
 body.physGunEquipped {
   cursor: none !important;
 }
+.mobile__note {
+  display: none;
+  font-size: 0.9rem;
+  color: #ff4444;
+  background: #fff3f3;
+  padding: 8px 12px;
+  border: 1px solid #ffcccc;
+  border-radius: 6px;
+  margin-top: 8px;
+  text-align: center;
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .mobile__note {
+    display: block;
+  }
+}
+
 
 /* === PhysElement Defaults === */
 .physElement {
