@@ -219,121 +219,91 @@ window.addEventListener("DOMContentLoaded", () => {
   });
   // --- mobile touch support ---
 if (window.matchMedia("(hover: none) and (pointer: coarse)").matches) {
-  let longPressTimer = null;
-  let touchOffset = { x: 0, y: 0 };
   let touchHeld = null;
   let velocity = { x: 0, y: 0 };
-  let lastMouse = { x: 0, y: 0 };
+  let lastTouch = { x: 0, y: 0 };
+  let lastTapTime = 0;
 
   gravgunZone.addEventListener("touchstart", (e) => {
     if (!gravityGunActive) return;
     const touch = e.touches[0];
-    lastMouse = { x: touch.clientX, y: touch.clientY };
+    lastTouch = { x: touch.clientX, y: touch.clientY };
+
+    const now = Date.now();
+    const tapGap = now - lastTapTime;
+    lastTapTime = now;
 
     const target = e.target.closest(".physElement");
 
-    longPressTimer = setTimeout(() => {
-      if (target && gravgunZone.contains(target)) {
-        touchHeld = target;
-        const rect = touchHeld.getBoundingClientRect();
-        touchOffset = {
-          x: touch.clientX - rect.left,
-          y: touch.clientY - rect.top,
-        };
+    // 🚀 Double-tap = fire
+    if (tapGap < 300 && target) {
+      const rect = target.getBoundingClientRect();
+      const muzzle = getMuzzlePosition();
+      let dx = rect.left - muzzle.x;
+      let dy = rect.top - muzzle.y;
+      const len = Math.max(Math.hypot(dx, dy), 1);
+      dx /= len;
+      dy /= len;
 
-        touchHeld.classList.add("dragging");
-        touchHeld.style.position = "fixed";
-        touchHeld.style.pointerEvents = "none";
-        touchHeld.style.zIndex = "2000";
-        document.body.classList.add("holding");
-        setGunState("open");
-        showCursorGun(gunStates.open);
-      }
-    }, 400); // long press threshold
+      const vx = dx * 420;
+      const vy = dy * 420;
+      const x = rect.left;
+      const y = rect.top;
 
-    e.preventDefault();
+      target.classList.add("fired");
+      addPhysicsObject(target, x, y, vx, vy);
+      setTimeout(() => target.classList.remove("fired"), 400);
+
+      e.preventDefault();
+      return;
+    }
+
+    // 👆 Single tap = grab
+    if (target && gravgunZone.contains(target)) {
+      touchHeld = target;
+      touchHeld.classList.add("dragging");
+      document.body.classList.add("holding");
+      showCursorGun(gunStates.open);
+      physicsObjects.delete(touchHeld);
+    }
   });
 
   gravgunZone.addEventListener("touchmove", (e) => {
-    clearTimeout(longPressTimer);
     if (!gravityGunActive || !touchHeld) return;
-
     const touch = e.touches[0];
-    const dx = touch.clientX - lastMouse.x;
-    const dy = touch.clientY - lastMouse.y;
-    velocity = { x: dx, y: dy };
 
-    touchHeld.style.left = touch.clientX - touchOffset.x + "px";
-    touchHeld.style.top = touch.clientY - touchOffset.y + "px";
+    velocity.x = touch.clientX - lastTouch.x;
+    velocity.y = touch.clientY - lastTouch.y;
 
-    lastMouse = { x: touch.clientX, y: touch.clientY };
+    lastTouch = { x: touch.clientX, y: touch.clientY };
+
+    // Follow finger
+    let x = parseFloat(touchHeld.style.left) || 0;
+    let y = parseFloat(touchHeld.style.top) || 0;
+    touchHeld.style.left = x + velocity.x + "px";
+    touchHeld.style.top = y + velocity.y + "px";
+
     e.preventDefault();
   });
 
   gravgunZone.addEventListener("touchend", () => {
-    clearTimeout(longPressTimer);
-    if (!touchHeld) return;
+    if (touchHeld) {
+      // Drop with momentum
+      const x = parseFloat(touchHeld.style.left) || 0;
+      const y = parseFloat(touchHeld.style.top) || 0;
+      const vx = velocity.x * 4.5;
+      const vy = velocity.y * 4.5;
 
-    let x = lastMouse.x - touchOffset.x;
-    let y = lastMouse.y - touchOffset.y;
-    let vx = velocity.x * 5;
-    let vy = velocity.y * 5;
-
-    // --- recoil FX ---
-    touchHeld.style.transition = "transform 0.1s ease";
-    touchHeld.style.transform = `translate(${x}px, ${y}px) scale(1.2)`;
-    setTimeout(() => {
-      touchHeld.style.transform = "none";
-      touchHeld.style.transition = "none";
-
-      // --- optional trail burst ---
-      if (typeof spawnTrailBurst === "function") {
-        spawnTrailBurst(x, y, vx, vy);
-      }
-
-      // --- optional launch sound ---
-      if (typeof playLaunchSound === "function") {
-        playLaunchSound();
-      }
-
-      // --- physics handoff ---
-      touchHeld.style.left = `${x}px`;
-      touchHeld.style.top = `${y}px`;
-      touchHeld.style.pointerEvents = "auto";
       addPhysicsObject(touchHeld, x, y, vx, vy);
-      requestAnimationFrame(updatePhysics);
 
-      // --- optional snap zone logic ---
-      const snapZone = document.querySelector(".snapZone");
-      if (snapZone) {
-        const zoneRect = snapZone.getBoundingClientRect();
-        if (
-          x > zoneRect.left &&
-          x < zoneRect.right &&
-          y > zoneRect.top &&
-          y < zoneRect.bottom
-        ) {
-          snapZone.appendChild(touchHeld);
-          touchHeld.style.position = "relative";
-          touchHeld.style.left = "0";
-          touchHeld.style.top = "0";
-          touchHeld.style.transform = "none";
-          physicsObjects.delete(touchHeld);
-
-          // --- optional snap zone highlight ---
-          snapZone.classList.add("highlight");
-          setTimeout(() => snapZone.classList.remove("highlight"), 300);
-        }
-      }
-    }, 100); // recoil delay
-
-    touchHeld.classList.remove("dragging");
-    touchHeld = null;
-    document.body.classList.remove("holding");
-    setGunState("close");
-    showCursorGun(gunStates.close);
+      touchHeld.classList.remove("dragging");
+      document.body.classList.remove("holding");
+      showCursorGun(gunStates.close);
+      touchHeld = null;
+    }
   });
 }
+
 
   // --- ESC to unequip ---
   document.addEventListener("keydown", (e) => {
