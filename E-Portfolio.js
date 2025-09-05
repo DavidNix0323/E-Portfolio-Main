@@ -224,8 +224,20 @@ if (window.matchMedia("(hover: none) and (pointer: coarse)").matches) {
   let lastTouch = { x: 0, y: 0 };
   let lastTapTime = 0;
 
+  const gravgunZone = document.getElementById("gravgun");
+  const note = document.querySelector("#gravityGunTrigger .mobile__note");
+
   gravgunZone.addEventListener("touchstart", (e) => {
+    const targetCard = e.target.closest("#gravityGunTrigger");
+
+    // Show mobile warning note only when tapping the Gravity Gun card
+    if (targetCard && note && !note.classList.contains("show")) {
+      note.classList.add("show");
+      setTimeout(() => note.classList.remove("show"), 3000);
+    }
+
     if (!gravityGunActive) return;
+
     const touch = e.touches[0];
     lastTouch = { x: touch.clientX, y: touch.clientY };
 
@@ -274,7 +286,6 @@ if (window.matchMedia("(hover: none) and (pointer: coarse)").matches) {
 
     velocity.x = touch.clientX - lastTouch.x;
     velocity.y = touch.clientY - lastTouch.y;
-
     lastTouch = { x: touch.clientX, y: touch.clientY };
 
     // Follow finger
@@ -302,7 +313,8 @@ if (window.matchMedia("(hover: none) and (pointer: coarse)").matches) {
       touchHeld = null;
     }
   });
-}
+};
+
 
 
   // --- ESC to unequip ---
