@@ -217,7 +217,7 @@ window.addEventListener("DOMContentLoaded", () => {
       unequipGun();
     }
   });
-  // --- mobile touch support ---
+ // --- mobile touch support ---
 if (window.matchMedia("(hover: none) and (pointer: coarse)").matches) {
   let touchHeld = null;
   let velocity = { x: 0, y: 0 };
@@ -225,15 +225,18 @@ if (window.matchMedia("(hover: none) and (pointer: coarse)").matches) {
   let lastTapTime = 0;
 
   const gravgunZone = document.getElementById("gravgun");
-  const note = document.querySelector("#gravityGunTrigger .mobile__note");
 
   gravgunZone.addEventListener("touchstart", (e) => {
     const targetCard = e.target.closest("#gravityGunTrigger");
 
     // Show mobile warning note only when tapping the Gravity Gun card
-    if (targetCard && note && !note.classList.contains("show")) {
-      note.classList.add("show");
-      setTimeout(() => note.classList.remove("show"), 3000);
+    if (targetCard) {
+      const note = targetCard.querySelector(".anim__overlay .mobile__note");
+      if (note && !note.classList.contains("show")) {
+        note.classList.add("show");
+        clearTimeout(note._hideTimeout); // optional: prevent overlapping timers
+        note._hideTimeout = setTimeout(() => note.classList.remove("show"), 3000);
+      }
     }
 
     if (!gravityGunActive) return;
@@ -246,6 +249,7 @@ if (window.matchMedia("(hover: none) and (pointer: coarse)").matches) {
     lastTapTime = now;
 
     const target = e.target.closest(".physElement");
+;
 
     // 🚀 Double-tap = fire
     if (tapGap < 300 && target) {
