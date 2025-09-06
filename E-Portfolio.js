@@ -217,109 +217,92 @@ window.addEventListener("DOMContentLoaded", () => {
       unequipGun();
     }
   });
-// --- mobile touch support ---
-if (window.matchMedia("(hover: none) and (pointer: coarse)").matches) {
-  let touchHeld = null;
-  let lastTouch = { x: 0, y: 0 };
-  let velocity = { x: 0, y: 0 };
-  let lastTapTime = 0;
+  // --- mobile touch support ---
+  if (window.matchMedia("(hover: none) and (pointer: coarse)").matches) {
+    let touchHeld = null;
+    let velocity = { x: 0, y: 0 };
+    let lastTouch = { x: 0, y: 0 };
+    let lastTapTime = 0;
 
-  const gravgunZone = document.getElementById("gravgun");
+    gravgunZone.addEventListener("touchstart", (e) => {
+      if (!gravityGunActive) return;
+      const touch = e.touches[0];
+      lastTouch = { x: touch.clientX, y: touch.clientY };
 
-  gravgunZone.addEventListener("touchstart", (e) => {
-    // Use the class selector to be more robust
-    const targetCard = e.target.closest(".gravity-gun-trigger");
+      const now = Date.now();
+      const tapGap = now - lastTapTime;
+      lastTapTime = now;
 
-    // Show mobile warning note
-    if (targetCard) {
-      const note = targetCard.querySelector(".anim__overlay .mobile__note");
-      if (note && !note.classList.contains("show")) {
-        note.classList.add("show");
-        clearTimeout(note._hideTimeout);
-        note._hideTimeout = setTimeout(() => note.classList.remove("show"), 3000);
+      const target = e.target.closest(".physElement");
+
+      // Double-tap = fire
+      if (tapGap < 300 && target) {
+        const rect = target.getBoundingClientRect();
+        const muzzle = getMuzzlePosition();
+        let dx = rect.left - muzzle.x;
+        let dy = rect.top - muzzle.y;
+        const len = Math.max(Math.hypot(dx, dy), 1);
+        dx /= len;
+        dy /= len;
+
+        const vx = dx * 420;
+        const vy = dy * 420;
+        const x = rect.left;
+        const y = rect.top;
+
+        target.classList.add("fired");
+        addPhysicsObject(target, x, y, vx, vy);
+        setTimeout(() => target.classList.remove("fired"), 400);
+
+        e.preventDefault();
+        return;
       }
-    }
 
-    if (!gravityGunActive) return;
+      // Single tap = grab
+      if (target && gravgunZone.contains(target)) {
+        touchHeld = target;
+        touchHeld.classList.add("dragging");
+        document.body.classList.add("holding");
+        showCursorGun(gunStates.open);
+        physicsObjects.delete(touchHeld);
+      }
+    });
 
-    const touch = e.touches[0];
-    lastTouch = { x: touch.clientX, y: touch.clientY };
+    gravgunZone.addEventListener("touchmove", (e) => {
+      if (!gravityGunActive || !touchHeld) return;
+      const touch = e.touches[0];
 
-    const now = Date.now();
-    const tapGap = now - lastTapTime;
-    lastTapTime = now;
+      velocity.x = touch.clientX - lastTouch.x;
+      velocity.y = touch.clientY - lastTouch.y;
 
-    const target = e.target.closest(".physElement");
+      lastTouch = { x: touch.clientX, y: touch.clientY };
 
-    // 🚀 Double-tap = fire
-    if (tapGap < 300 && target) {
-      const rect = target.getBoundingClientRect();
-      const muzzle = getMuzzlePosition();
-      let dx = rect.left - muzzle.x;
-      let dy = rect.top - muzzle.y;
-      const len = Math.max(Math.hypot(dx, dy), 1);
-      dx /= len;
-      dy /= len;
-
-      const vx = dx * 420;
-      const vy = dy * 420;
-      const x = rect.left;
-      const y = rect.top;
-
-      target.classList.add("fired");
-      addPhysicsObject(target, x, y, vx, vy);
-      setTimeout(() => target.classList.remove("fired"), 400);
+      // Move object with finger
+      let x = parseFloat(touchHeld.style.left) || 0;
+      let y = parseFloat(touchHeld.style.top) || 0;
+      touchHeld.style.left = x + velocity.x + "px";
+      touchHeld.style.top = y + velocity.y + "px";
 
       e.preventDefault();
-      return;
-    }
+    });
 
-    // 👆 Single tap = grab
-    if (target && gravgunZone.contains(target)) {
-      touchHeld = target;
-      touchHeld.classList.add("dragging");
-      document.body.classList.add("holding");
-      showCursorGun(gunStates.open);
-      physicsObjects.delete(touchHeld);
-    }
-  });
+    gravgunZone.addEventListener("touchend", () => {
+      if (touchHeld) {
+        // Drop with momentum
+        const x = parseFloat(touchHeld.style.left) || 0;
+        const y = parseFloat(touchHeld.style.top) || 0;
+        const vx = velocity.x * 4.5;
+        const vy = velocity.y * 4.5;
 
-  gravgunZone.addEventListener("touchmove", (e) => {
-    if (!gravityGunActive || !touchHeld) return;
-    const touch = e.touches[0];
+        addPhysicsObject(touchHeld, x, y, vx, vy);
 
-    velocity.x = touch.clientX - lastTouch.x;
-    velocity.y = touch.clientY - lastTouch.y;
-    lastTouch = { x: touch.clientX, y: touch.clientY };
-
-    // Follow finger
-    let x = parseFloat(touchHeld.style.left) || 0;
-    let y = parseFloat(touchHeld.style.top) || 0;
-    touchHeld.style.left = x + velocity.x + "px";
-    touchHeld.style.top = y + velocity.y + "px";
-
-    e.preventDefault();
-  });
-
-  gravgunZone.addEventListener("touchend", () => {
-    if (touchHeld) {
-      // Drop with momentum
-      const x = parseFloat(touchHeld.style.left) || 0;
-      const y = parseFloat(touchHeld.style.top) || 0;
-      const vx = velocity.x * 4.5;
-      const vy = velocity.y * 4.5;
-
-      addPhysicsObject(touchHeld, x, y, vx, vy);
-
-      touchHeld.classList.remove("dragging");
-      document.body.classList.remove("holding");
-      showCursorGun(gunStates.close);
-      touchHeld = null;
-    }
-  });
-}
-
-
+        touchHeld.classList.remove("dragging");
+        document.body.classList.remove("holding");
+        showCursorGun(gunStates.close);
+        touchHeld = null;
+      }
+    });
+  }
 
   // --- ESC to unequip ---
   document.addEventListener("keydown", (e) => {
