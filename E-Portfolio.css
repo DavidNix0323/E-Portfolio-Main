@@ -660,11 +660,11 @@ body.physGunEquipped {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) translateY(0);
-  z-index: 1000;
+  z-index: 9999; /* raise above physElements, cursor, etc */
   padding: 12px 16px;
   font-size: 0.9rem;
   color: #ff4444;
-  background: rgba(255, 243, 243, 0.7);
+  background: rgba(255, 243, 243, 0.85);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   border: 1px solid #ffcccc;
@@ -681,11 +681,7 @@ body.physGunEquipped {
 .mobile__note.show {
   opacity: 1;
   transform: translate(-50%, -50%) translateY(-10px) scale(1.05);
-}
-
-.mobile__note.hide {
-  opacity: 0;
-  transform: translate(-50%, -50%) translateY(-20px) scale(1);
+  pointer-events: auto; 
 }
 
 
