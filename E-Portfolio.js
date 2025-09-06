@@ -121,8 +121,18 @@ window.addEventListener("DOMContentLoaded", () => {
   };
 
   // --- background parallax ---
-  window.moveBackground = function (event) {
+(() => {
+  if (window.__parallaxInitialized) return;
+  window.__parallaxInitialized = true;
+
+  const shapeStates = [];
+  const scaleFactor = 0.05;
+  const gravityStrength = 0.1;
+  const damping = 0.85;
+
+  function moveBackground(event) {
     const shapes = document.querySelectorAll(".shape");
+
     if (shapes.length !== shapeStates.length) {
       shapeStates.length = 0;
       shapes.forEach(() => {
@@ -149,11 +159,18 @@ window.addEventListener("DOMContentLoaded", () => {
       state.x += state.vx;
       state.y += state.vy;
 
-      shape.style.transform = `translate(${state.x}px, ${state.y}px) rotate(${
-        state.vx * 0.1
-      }rad)`;
+      shape.style.transform = `translate(${state.x}px, ${state.y}px) rotate(${state.vx * 0.1}rad)`;
     });
-  };
+  }
+
+  function initParallax() {
+    document.querySelector("#landing-page").addEventListener("mousemove", moveBackground);
+
+  }
+
+  window.addEventListener("pageshow", initParallax);
+  initParallax();
+})();
 
   // --- theme toggle ---
   window.toggleContrast = function () {
